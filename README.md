@@ -384,6 +384,15 @@ drop user 'test'@'localhost';
 | TRIM(str)  | 去掉字符串头部和尾部的空格  |
 | SUBSTRING(str, start, len)  | 返回从字符串str从start位置起的len个长度的字符串  |
 
+1、LOCATE(substr , str )：返回子串 substr 在字符串 str 中第一次出现的位置，如果字符substr在字符串str中不存在，则返回0；
+2、POSITION(substr  IN str )：返回子串 substr 在字符串 str 中第一次出现的位置，如果字符substr在字符串str中不存在，与LOCATE函数作用相同；
+3、LEFT(str, length)：从左边开始截取str，length是截取的长度；
+4、RIGHT(str, length)：从右边开始截取str，length是截取的长度；
+5、SUBSTRING_INDEX(str  ,substr  ,n)：返回字符substr在str中第n次出现位置之前的字符串;
+6、SUBSTRING(str  ,n ,m)：返回字符串str从第n个字符截取到第m个字符；
+7、REPLACE(str, n, m)：将字符串str中的n字符替换成m字符；
+8、LENGTH(str)：计算字符串str的长度
+
 使用示例：
 
 ```mysql
@@ -1225,7 +1234,7 @@ select count(distinct substring(email, 1, 5)) / count(*) from tb_user;
 ```
 前缀索引中是有可能碰到相同的索引的情况的（因为选择性可能不为1），所以使用前缀索引进行查询的时候，mysql 会有一个回表查询的过程，确定是否为所需数据。如图中的查询到lvbu6之后还要进行回表，回表完再查xiaoy，看到xiaoy是不需要的数据，则停止查下一个。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/pre.png "索引流程")
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/pre.png "索引流程")
 
 
 
@@ -1244,7 +1253,7 @@ phone 和 name 都建立了索引情况下，这句只会用到phone索引字段
 
 联合索引的数据组织图：
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/uion.png)
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/uion.png)
 
 ##### 注意事项
 
@@ -1289,7 +1298,7 @@ load data local infile '/root/sql1.log' into table 'tb_user' fields terminated b
 
 主键的顺序的插入过程如下：  
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/keySort.png)
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/keySort.png)
 
 但是如果主键是乱序插入的话，就会导致需要插入的位置为中间的位置，会有页分裂的过程。
 
@@ -1671,20 +1680,20 @@ InnoDB实现了以下两种类型的行锁：
 
 ### 架构
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic.png )
 
 Buffer Pool：缓冲池是主内存中的一个区域，里面可以缓存磁盘上经常操作的真实数据，在执行增删改查操作时，先操作缓冲池中的数据（若缓冲池没有数据，则从磁盘加载并缓存），然后再以一定频率刷新到磁盘，从而减少磁盘I0，加快处理速度。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic2.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic3.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic4.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic5.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic2.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic3.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic4.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic5.png )
 
 
 磁盘架构：
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic6.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic7.png )
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/artic8.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic6.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic7.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/artic8.png )
 
 InnoDB的整个体系结构为：
 
@@ -1732,7 +1741,7 @@ undo log和redo log记录物理日志不一样，它是逻辑日志。可以认�
 
 有三个隐藏的字段:
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/MVCC.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/MVCC.png )
 
 > undo log回滚日志，在insert、update、delete的时候产生的便于数据回滚的日志。
 > 当insert的时候，产生的undo log日志只在回滚时需要，在事务提交后，可被立即删除。
@@ -1742,11 +1751,11 @@ undo log 版本链：
 
 undo log日志会记录原来的版本的数据，因为是通过undo log 日志进行回滚的。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/MVCCList.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/MVCCList.png )
 
 如何确定返回哪一个版本 这是由read view决定返回 undo log 中的哪一个版本。
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/readview0.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/readview0.png )
 
 > RC隔离级别下，在事务中每一次执行快照读时生成ReadView。  
 > RR隔离级别下，在事务中第一次执行快照读时生成ReadView，后续会复用。  
@@ -1760,7 +1769,7 @@ MVCC 靠 隐藏字段 , undo log 版本链 , read view 实现的。
 * 一致性-undo log + redo log
 * 隔离性-锁 + MVCC
 
-![images](https://github.com/Buildings-Lei/mysql_note/blob/main/images/readview.png )
+![images](https://githubfast.com/Buildings-Lei/mysql_note/blob/main/images/readview.png )
 
 # 数据类型
 
